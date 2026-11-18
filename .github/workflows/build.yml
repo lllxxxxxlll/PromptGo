@@ -60,4 +60,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $assets = @((Get-ChildItem artifacts -File).FullName)
-          gh release create $env:GITHUB_REF_NAME @assets --verify-tag --draft --prerelease --title "PromptMate Community $env:GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          gh release create $env:GITHUB_REF_NAME @assets --verify-tag --draft --prerelease --title "PromptMate Community $env:GITHUB_REF_NAME" --generate-notes

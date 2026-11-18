@@ -1,81 +1,62 @@
-# PromptMate 提示词助手
+# PromptGo · 提示词助手
 
-> **PromptMate Community 0.1.4-fork.1** 是非官方修改版，修复了 Windows 浏览器粘贴焦点和分类悬停闪烁。许可见 [LICENSE](LICENSE)，发版步骤见 [RELEASING.md](RELEASING.md)。
+把常用提示词存在本机。在浏览器或桌面应用的输入框里，按一个快捷键就能搜索并粘贴，无需在应用之间来回复制。
 
-一个本地优先的跨平台桌面提示词管理工具（Tauri 2 + Vue 3），支持 Windows 与 macOS。
+本仓库发布的是 **PromptMate Community** 非官方修改版。安装后，在开始菜单和系统托盘中可找到 **PromptMate**。
 
-## 功能
+## 下载与安装
 
-- **全局快捷键呼出**：任何应用中按 `Alt+Q`（可自定义）弹出快捷面板，搜索 → 回车即自动粘贴到当前输入框
-- **分类 + 搜索**：分类筛选、标题/标签/内容全文搜索、**拼音首字母搜索**（输入 `sjsc` 命中「设计审查」），常用提示词可置顶
-- **变量占位符**：提示词中写 `{{变量名|说明}}`，调用时弹窗填写后拼接成最终文本
-- **使用频率**：自动记录使用次数与最近使用时间，按频率排序
-- **提示词独立快捷键**：给任意提示词绑定专属快捷键（如 `Ctrl+Alt+1`），按下即直接粘贴，含变量的自动弹出填写窗
-- **快速捕获**：选中任意文字按 `Alt+S`，一键保存为新提示词
-- **面板内预览**：快捷面板按 `→` 展开当前条目的完整内容
-- **剪贴板历史**：自动记录系统内新复制的文本**与图片**（可开关、可搜索、可再粘贴）；粘贴完成后可选自动恢复原剪贴板
-- **WebDAV 云同步**：支持坚果云等任意 WebDAV 网盘，条目级合并（按更新时间取新、删除传播），支持多设备
-- **GitHub Gist 云同步**：数据存入你的 secret Gist（不公开、仅凭 Token 可访问、自带版本历史），首次同步自动创建 Gist，同样支持条目级合并与自动同步
-- **自动同步**：开启后，启动时与内容变更后会自动在后台合并同步
-- **亮色/暗色主题**：暗色、亮色或跟随系统
-- **导入导出**：JSON 完整备份 / Markdown / TXT 批量导入导出
-- **系统托盘**：关闭窗口不退出，托盘常驻
+当前发布包适用于 **Windows x64**，版本为 **`v0.1.4-fork.1`**（预发布）。也可以浏览 [GitHub Releases](https://github.com/lllxxxxxlll/PromptGo/releases) 查看各版本。
 
-## 开发
+| 下载 | 怎么用 |
+| --- | --- |
+| [Windows 安装包（推荐）](https://github.com/lllxxxxxlll/PromptGo/releases/download/v0.1.4-fork.1/PromptMate_0.1.4-fork.1_x64-setup.exe) | 下载后运行 `-setup.exe`，按提示安装，再从开始菜单打开 PromptMate。 |
+| [Windows 免安装版（ZIP）](https://github.com/lllxxxxxlll/PromptGo/releases/download/v0.1.4-fork.1/PromptMate-Community-windows-x64.zip) | 解压整个 ZIP，再双击其中的 `promptmate.exe`。 |
 
-```bash
-pnpm install
-pnpm tauri dev     # 开发模式
-pnpm tauri build   # 产出安装包（src-tauri/target/release/bundle/nsis/）
+下载后可用 [SHA256SUMS.txt](https://github.com/lllxxxxxlll/PromptGo/releases/download/v0.1.4-fork.1/SHA256SUMS.txt) 核对文件。程序当前未做代码签名，Windows 可能显示未知发布者。
+
+## 快速上手
+
+1. **打开管理窗口。** 启动后，在 Windows 任务栏右下角找到 PromptMate 图标，右键选择「打开管理窗口」。图标也可能在系统托盘的 `^` 展开菜单里。
+2. **保存一条提示词。** 进入「提示词」，点击「新建」，填上标题和正文。可以选择分类、加标签，点击「保存」完成。
+3. **在其他应用里使用。** 先把光标放进目标输入框，按默认快捷键 `Alt+Q` 呼出面板。输入标题、关键词或拼音首字母，按 `Enter` 或单击目标提示词，就会尝试把内容填回原输入框。
+4. **按需要自定义。** 如果 `Alt+Q` 被输入法或其他应用占用，打开管理窗口 →「设置」，修改「呼出快捷面板」。只想复制内容时，选中提示词后按 `Shift+Enter`。
+
+### 带变量的提示词
+
+在正文中写入 `{{变量名|说明}}`，调用时可以填写本次使用的值。例如，保存下面这条提示词后，每次调用只需要输入不同的主题。
+
+```text
+请围绕「{{主题|输入你正在研究的问题}}」给出三个值得追问的问题。
 ```
 
-依赖：Node 18+、Rust。
+## 常用功能
 
-- Windows：需 MSVC 工具链与 VS Build Tools，安装包产出在 `src-tauri/target/release/bundle/nsis/`
-- macOS：需 Xcode Command Line Tools，安装包产出在 `src-tauri/target/release/bundle/dmg/`
-
-### macOS 首次使用
-
-1. 全局快捷键呼出与自动粘贴依赖系统「辅助功能」权限：未授权时应用设置页会显示引导，一键打开
-   **系统设置 → 隐私与安全性 → 辅助功能**，勾选 PromptMate 后重启应用即可
-2. 未做代码签名，若 Gatekeeper 拦截，右键 App →「打开」即可
-
-### GitHub Actions 发版
-
-推送匹配版本的标签后，GitHub Actions 生成 Windows x64 安装包和独立程序压缩包，并放入预发布草稿。维护者可在 Releases 检查附件后公开发布。
-
-## 数据与隐私
-
-- 全部数据保存在本机应用数据目录的 `data.json`（Windows `%APPDATA%\com.promptmate.app\`，macOS `~/Library/Application Support/com.promptmate.app/`；每次保存自动保留上一份备份 `data.json.bak`；若数据文件损坏，应用会将其隔离为 `data.json.corrupt-*` 并以空数据启动，可从 `.bak` 手动恢复）
-- 云同步为可选功能，凭据只存在本机，不上传任何第三方服务器（仅与你配置的 WebDAV 网盘或 GitHub API 通信）
-- 文本剪贴板历史默认**不**参与云同步；如需同步，在「云同步」页开启「云同步包含剪贴板历史」（多设备间请保持该开关一致）。图片条目始终只存本机
-
-### GitHub Gist 同步配置
-
-1. 登录 GitHub → 右上角头像 → **Settings** → 左侧最底部 **Developer settings**
-2. **Personal access tokens** → **Tokens (classic)** → **Generate new token (classic)**
-3. 勾选 `gist` 权限（无需其他权限），生成后复制 Token
-4. 在 PromptMate「云同步」页切换到 **GitHub Gist**，粘贴 Token → 保存 → 测试连接
-5. Gist ID 留空即可，首次同步时自动创建 secret Gist 并回填
+- **整理提示词**：按分类筛选，按标题、内容、标签或拼音首字母搜索，将常用条目置顶，也可以给单条提示词绑定快捷键。
+- **快速捕获**：选中文字后按默认快捷键 `Alt+S`，把选中的内容存为提示词。
+- **剪贴板历史**：可记录文本和图片，也可以在设置里关闭记录、调整粘贴后是否恢复原剪贴板。
+- **导入、导出与同步**：支持 JSON 备份、Markdown/TXT 导入导出。需要多设备使用时，可在「云同步」页配置 WebDAV 或 GitHub Gist。
 
 ## 快捷键
 
-| 快捷键 | 作用 |
+| 按键 | 作用 |
 | --- | --- |
-| `Alt+Q` | 呼出 / 隐藏快捷面板（可自定义） |
-| `Alt+S` | 快速捕获：选中文本一键存为提示词（可自定义） |
-| 提示词独立快捷键 | 在编辑器中为提示词绑定，按下即粘贴（可自定义） |
-| `↑` `↓` | 选择提示词 |
-| `→` | 展开 / 收起当前条目完整预览 |
-| `Enter` | 粘贴到当前输入框 |
-| `Shift+Enter` | 仅复制到剪贴板 |
-| `Tab` | 切换 提示词 / 剪贴板 模式 |
-| `Esc` | 关闭面板 |
-| `Ctrl+K` | 聚焦搜索框（管理窗口；在无搜索框的页签会自动跳回提示词页） |
-| `Ctrl+S` | 管理窗口中保存提示词 |
+| `Alt+Q` | 呼出或隐藏快捷面板，可在设置中修改 |
+| `Alt+S` | 捕获当前选中的文字，可在设置中修改 |
+| `↑` / `↓` | 在快捷面板中选择条目 |
+| `→` | 展开或收起当前条目的预览 |
+| `Enter` / 单击 | 把提示词粘贴到原输入框 |
+| `Shift+Enter` | 只复制内容 |
+| `Tab` | 在提示词和剪贴板历史间切换 |
+| `Esc` | 关闭快捷面板 |
+| `Ctrl+K` / `Ctrl+S` | 在管理窗口聚焦搜索 / 保存提示词 |
 
-> 图片条目仅保存在本机（应用数据目录的 `images/`，macOS 路径同上），不参与云同步与 JSON 导出。
+## 数据和备份
 
-## 许可证
+Windows 默认将数据保存在 `%APPDATA%\com.promptmate.app\`。在管理窗口的「设置」页点「打开目录」，可查看当前实际使用的位置。更换电脑、重装或切换版本前，可先从管理窗口的「数据」页导出 JSON 备份。若已设置 `PROMPTMATE_DATA_DIR`，应用会读取该变量指定的目录。
 
-本项目基于 [MIT License](LICENSE) 开源发布。
+关闭管理窗口后，程序仍在托盘运行。要彻底关闭或切换版本，请从托盘菜单选择「退出」。
+
+## 许可
+
+项目采用 [MIT 许可](LICENSE)。Inter 字体采用 [SIL 开放字体许可证](licenses/Inter-OFL.txt)。
